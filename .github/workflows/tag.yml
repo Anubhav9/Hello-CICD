@@ -46,5 +46,5 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git tag $SNAPSHOT_TAG
-        git push https://${{github.token}}@github.com/Anubhav9/Hello-CICD.git $SNAPSHOT_TAG
+        git push https://${{secrets.TEMP_TOKEN}}@github.com/Anubhav9/Hello-CICD.git $SNAPSHOT_TAG
         
