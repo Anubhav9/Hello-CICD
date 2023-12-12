@@ -26,6 +26,10 @@ jobs:
           echo "Lint score too low or not found"
         fi
 
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.TEMP_TOKEN }}
+    
     # Check if a tag already exists for the current commit
     - name: Check if Tag Exists
       id: check-tag
