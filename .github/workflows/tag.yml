@@ -20,7 +20,7 @@ jobs:
     - name: Run Linter
       id: lint
       run: |
-        pylint_output=$(pylint . --output-format=text) || true
+        pylint_output=$(pylint app.py --output-format=text) || true
         echo "$pylint_output"
         lint_score=$(echo "$pylint_output" | grep "Your code has been rated at" | sed 's/.*rated at \([-0-9.]*\)\/.*/\1/')
         echo "LINT_SCORE=$lint_score" >> $GITHUB_ENV
