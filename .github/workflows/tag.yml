@@ -23,13 +23,11 @@ jobs:
     - name: Run Linter
       id: lint
       run: |
-        # Run pylint on your codebase
-        pylint_output=$(pylint your_code_directory_or_file)
-        # Extract lint score or determine pass/fail
-        # Assume you have a script or method to parse pylint output and output a score
-        echo "LINT_SCORE=$(parse-pylint-output "$pylint_output")" >> $GITHUB_ENV
-        # Optionally, fail the workflow if lint score is below threshold
-        if [[ $LINT_SCORE -lt 5 ]]; then
+        pylint_output=$(pylint your_code_directory_or_file --output-format=text)
+        echo "$pylint_output"
+        lint_score=$(echo "$pylint_output" | grep "Your code has been rated at" | sed 's/.*rated at \([-0-9.]*\)\/.*/\1/')
+        echo "LINT_SCORE=$lint_score" >> $GITHUB_ENV
+        if [[ "$lint_score" != "" && $(echo "$lint_score < 7" | bc) -eq 1 ]]; then
           exit 1
         fi
 
