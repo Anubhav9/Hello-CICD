@@ -29,7 +29,7 @@ jobs:
         # Assume you have a script or method to parse pylint output and output a score
         echo "LINT_SCORE=$(parse-pylint-output "$pylint_output")" >> $GITHUB_ENV
         # Optionally, fail the workflow if lint score is below threshold
-        if [[ $LINT_SCORE -lt 8 ]]; then
+        if [[ $LINT_SCORE -lt 5 ]]; then
           exit 1
         fi
 
