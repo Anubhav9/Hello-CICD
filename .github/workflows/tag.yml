@@ -14,8 +14,8 @@ jobs:
       with:
         python-version: '3.8'
 
-    - name: Install pylint
-      run: pip install pylint
+    - name: Install pylint and flask
+      run: pip install pylint,flask
 
     - name: Run Linter
       id: lint
