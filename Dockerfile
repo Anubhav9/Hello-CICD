@@ -4,6 +4,6 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 1212
 
 CMD ["python", "app.py"]
