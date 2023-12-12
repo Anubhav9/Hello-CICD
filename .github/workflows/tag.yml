@@ -1,0 +1,33 @@
+name: Lint and Tag
+
+on: [push]
+
+jobs:
+  lint-and-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run Linter
+      id: lint
+      run: |
+        flake8 --statistics --output-file lint-report.txt
+
+    # Conditional step to check the lint score and create a tag
+    - name: Check Lint Score and Tag
+      if: ${{ steps.lint.outputs.score > 8 }}
+      run: |
+        if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+          # For master branch
+          TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
+        else
+          # For other branches
+          BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
+          TAG_NAME="v$(date +'%Y%m%d%H%M%S')-SNAPSHOT"
+        fi
+        # Create and push the tag
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag $TAG_NAME
+        git push origin $TAG_NAME
