@@ -1,0 +1,62 @@
+name: Lint and Tag
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    types:
+      - synchronize
+
+jobs:
+  lint-and-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install pylint and flask
+      run: pip install pylint flask
+
+    - name: Run Linter
+      id: lint
+      run: |
+        pylint_output=$(pylint app.py --output-format=text) || true
+        echo "$pylint_output"
+        lint_score=$(echo "$pylint_output" | grep "Your code has been rated at" | sed 's/.*rated at \([-0-9.]*\)\/.*/\1/')
+        echo "LINT_SCORE=$lint_score" >> $GITHUB_ENV
+        if [ -z "$lint_score" ] || [[ $(echo "$lint_score < 7" | bc) -eq 1 ]]; then
+          echo "Lint score too low or not found"
+          
+        fi
+
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.TEMP_TOKEN }}
+
+    - name: Create Tag
+      if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'push' }}
+      run: |
+        TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag $TAG_NAME
+        git push origin $TAG_NAME
+        exit 1
+
+    - name: Create Snapshot Tag
+      if: ${{ github.ref != 'refs/heads/master' && github.event_name != 'push' }}
+      run: |
+        BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
+        SNAPSHOT_TAG="v$(date +'%Y%m%d%H%M%S')-SNAPSHOT"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag $SNAPSHOT_TAG
+        git push origin $SNAPSHOT_TAG
+       
+        
