@@ -9,24 +9,32 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install flake8
+      run: pip install flake8
+
+    # Run the linter and calculate the score
     - name: Run Linter
       id: lint
       run: |
-        flake8 --statistics --output-file lint-report.txt
+        # Run flake8 and save the output
+        flake8 --output-file lint-report.txt
+  
 
     # Conditional step to check the lint score and create a tag
     - name: Check Lint Score and Tag
       if: ${{ steps.lint.outputs.score > 8 }}
       run: |
         if [ "${{ github.ref }}" = "refs/heads/master" ]; then
-          # For master branch
           TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
         else
-          # For other branches
-          BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
           TAG_NAME="v$(date +'%Y%m%d%H%M%S')-SNAPSHOT"
+          
         fi
-        # Create and push the tag
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git tag $TAG_NAME
