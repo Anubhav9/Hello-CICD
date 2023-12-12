@@ -37,7 +37,7 @@ jobs:
         token: ${{ secrets.TEMP_TOKEN }}
 
     - name: Create Tag
-      if: ${{ github.ref == 'refs/heads/master' }}
+      if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'push' }}
       run: |
         TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
         git config --local user.email "action@github.com"
@@ -47,7 +47,7 @@ jobs:
         exit 1
 
     - name: Create Snapshot Tag
-      if: ${{ github.ref != 'refs/heads/master' }}
+      if: ${{ github.ref != 'refs/heads/master' && github.event_name != 'push' }}
       run: |
         BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
         SNAPSHOT_TAG="v$(date +'%Y%m%d%H%M%S')-SNAPSHOT"
