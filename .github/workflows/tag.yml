@@ -41,6 +41,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git tag $TAG_NAME
         git push origin $TAG_NAME
+        exit 1
 
     - name: Create Snapshot Tag
       if: ${{ github.ref != 'refs/heads/master' }}
@@ -51,4 +52,5 @@ jobs:
         git config --local user.name "GitHub Action"
         git tag $SNAPSHOT_TAG
         git push origin $SNAPSHOT_TAG
+        exit 1
         
