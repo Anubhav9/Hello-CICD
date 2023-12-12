@@ -15,7 +15,7 @@ jobs:
         python-version: '3.8'
 
     - name: Install pylint and flask
-      run: pip install pylint,flask
+      run: pip install pylint flask
 
     - name: Run Linter
       id: lint
@@ -42,7 +42,7 @@ jobs:
       if: ${{ github.ref != 'refs/heads/master' }}
       run: |
         BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
-        SNAPSHOT_TAG="${BRANCH_NAME}-v$(date +'%Y%m%d%H%M%S')-SNAPSHOT"
+        SNAPSHOT_TAG="v$(date +'%Y%m%d%H%M%S')-SNAPSHOT"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git tag $SNAPSHOT_TAG
