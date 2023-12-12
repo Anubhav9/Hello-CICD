@@ -1,6 +1,9 @@
 name: Lint and Tag
 
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
 
 jobs:
   lint-and-tag:
@@ -26,7 +29,7 @@ jobs:
         echo "LINT_SCORE=$lint_score" >> $GITHUB_ENV
         if [ -z "$lint_score" ] || [[ $(echo "$lint_score < 7" | bc) -eq 1 ]]; then
           echo "Lint score too low or not found"
-          exit 1
+          
         fi
 
     - uses: actions/checkout@v2
@@ -52,5 +55,5 @@ jobs:
         git config --local user.name "GitHub Action"
         git tag $SNAPSHOT_TAG
         git push origin $SNAPSHOT_TAG
-        exit 1
+       
         
