@@ -1,1 +1,64 @@
+name: Lint and Tag
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - closed
+jobs:
+  lint-and-tag:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install pylint and flask
+      run: pip install pylint flask
+    - name: Run Linter
+      id: lint
+      run: |
+        pylint_output=$(pylint app.py --output-format=text) || true
+        echo "$pylint_output"
+        lint_score=$(echo "$pylint_output" | grep "Your code has been rated at" | sed 's/.*rated at \([-0-9.]*\)\/.*/\1/')
+        echo "LINT_SCORE=$lint_score" >> $GITHUB_ENV
+        if [ -z "$lint_score" ] || [[ $(echo "$lint_score < 7" | bc) -eq 1 ]]; then
+          echo "Lint score too low or not found"
+        fi
+
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.TEMP_TOKEN }}
+    
+    # Check if a tag already exists for the current commit
+    - name: Check if Tag Exists
+      id: check-tag
+      run: |
+        TAG_EXISTS=$(git tag --points-at HEAD)
+        if [ -n "$TAG_EXISTS" ]; then
+          echo "Tag already exists for the current commit."
+          echo "SKIP_TAG_CREATION=true" >> $GITHUB_ENV
+        fi
+
+    # Create a tag if on master branch and no tag exists for the current commit
+    - name: Create Tag
+      if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'push' && env.SKIP_TAG_CREATION != 'true' }}
+      run: |
+        TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag $TAG_NAME
+        git push origin $TAG_NAME
+
+    # Create a snapshot tag if not on master branch and no tag exists for the current commit
+    - name: Create Snapshot Tag
+      if: ${{ github.ref != 'refs/heads/master' && github.event_name != 'push' && env.SKIP_TAG_CREATION != 'true' }}
+      run: |
+        BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
+        SNAPSHOT_TAG="v$(date +'%Y%m%d%H%M%S')-SNAPSHOT"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag $SNAPSHOT_TAG
+        git push origin $SNAPSHOT_TAG
 
