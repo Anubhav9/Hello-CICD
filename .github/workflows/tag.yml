@@ -29,6 +29,10 @@ jobs:
           exit 1
         fi
 
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.TEMP_TOKEN }}
+
     - name: Create Tag
       if: ${{ github.ref == 'refs/heads/master' }}
       run: |
@@ -36,7 +40,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git tag $TAG_NAME
-        git push https://${{ secrets.PAT }}@github.com/Anubhav9/Hello-CICD.git $TAG_NAME
+        git push origin $TAG_NAME
 
     - name: Create Snapshot Tag
       if: ${{ github.ref != 'refs/heads/master' }}
@@ -46,5 +50,5 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git tag $SNAPSHOT_TAG
-        git push https://${{secrets.TEMP_TOKEN}}@github.com/Anubhav9/Hello-CICD.git $SNAPSHOT_TAG
+        git push origin $SNAPSHOT_TAG
         
