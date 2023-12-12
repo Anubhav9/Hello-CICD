@@ -47,3 +47,4 @@ jobs:
         git config --local user.name "GitHub Action"
         git tag $SNAPSHOT_TAG
         git push https://${{ secrets.PAT }}@github.com/Anubhav9/Hello-CICD.git $SNAPSHOT_TAG
+        
