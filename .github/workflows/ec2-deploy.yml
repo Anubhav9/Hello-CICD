@@ -24,11 +24,8 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh ubuntu@3.112.230.42 << EOF
-            cd /home/ubuntu/Hello-CICD
-            git pull origin master
-            docker compose down
-            docker compose up --build
-            # Commands to stop and remove the current Docker container
-            # Commands to build/run the new Docker container
-            # For example: docker-compose up -d --build
+          cd /home/ubuntu/Hello-CICD
+          git pull origin master
+          docker compose down
+          docker compose up --build
           EOF
