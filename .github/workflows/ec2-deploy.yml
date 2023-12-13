@@ -23,7 +23,7 @@ jobs:
           
       - name: Clone Repository on EC2
         run: |
-          ssh -i ~/.ssh/cicd-keypair.pem ubuntu@ec2-13-114-103-130.ap-northeast-1.compute.amazonaws.com 'rm -rf /home/ubuntu/Hello-CICD && git clone git@github.com:user/repo.git /home/ubuntu/Hello-CICD'
+          ssh -i ~/.ssh/cicd-keypair.pem ubuntu@ec2-13-114-103-130.ap-northeast-1.compute.amazonaws.com 'rm -rf /home/ubuntu/Hello-CICD && git clone git@github.com:Anubhav9/Hello-CICD.git /home/ubuntu/Hello-CICD'
 
       - name: Restart Services
         run: |
