@@ -16,16 +16,9 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan 3.112.230.42 >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/cicd-keypair.pem
+          chmod 600 ~/.ssh/cicd-keypair.pem
 
       - name: Deploy to EC2
         run: |
-          ssh ubuntu@3.112.230.42
-          cd /home/ubuntu/Hello-CICD
-          git pull origin master
-          docker compose down
-          docker compose up --build
-          EOF
+          ssh -i ~/.ssh/cicd-keypair.pem ubuntu@ec2-13-114-103-130.ap-northeast-1.compute.amazonaws.com "cd /home/ubuntu/Hello-CICD && git pull origin main && docker-compose down && docker-compose up --build"
