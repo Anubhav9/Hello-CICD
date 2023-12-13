@@ -23,8 +23,10 @@ jobs:
           
       - name: Clone Repository on EC2
         run: |
+          sudo su
           ssh -i ~/.ssh/cicd-keypair.pem ubuntu@ec2-13-114-103-130.ap-northeast-1.compute.amazonaws.com 'rm -rf /home/ubuntu/Hello-CICD && git clone git@github.com:Anubhav9/Hello-CICD.git /home/ubuntu/Hello-CICD'
 
       - name: Restart Services
         run: |
+          sudo su
           ssh -i ~/.ssh/cicd-keypair.pem ubuntu@ec2-13-114-103-130.ap-northeast-1.compute.amazonaws.com 'cd /home/ubuntu/Hello-CICD && docker-compose down && docker-compose up --build'
