@@ -43,7 +43,7 @@ jobs:
 
     # Create a tag if on master branch and no tag exists for the current commit
     - name: Create Tag
-      if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'push' && env.SKIP_TAG_CREATION != 'true' }}
+      if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'push' && env.SKIP_TAG_CREATION != 'true' }}
       run: |
         TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
         git config --local user.email "action@github.com"
