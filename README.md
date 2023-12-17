@@ -14,15 +14,15 @@ Hello-CICD is a demonstration project showcasing Continuous Integration and Cont
 ### Setup
 
 1. Clone the repository:
-   ```bash```
+   ```bash
    git clone https://github.com/Anubhav9/Hello-CICD.git
    ```
 2. Navigate to the repository directory:
-   ```bash```
+   ```bash
    cd Hello-CICD
    ```
 3. Start the docker container
-   ```bash```
+   ```bash
    docker compose up --build -d
    ```
 
