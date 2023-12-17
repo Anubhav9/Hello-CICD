@@ -35,10 +35,10 @@ ii) Deploy to EC2 -> As soon as the open PR is merged to main / master branch, t
 
 ## Contributing
 
-Contributions are welcome! Please read our [Contribution Guidelines](CONTRIBUTING.md) for details on how to contribute to this project.
+Contributions are welcome! Please raise feature request PR and I'll get it checked.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
 
